@@ -95,8 +95,11 @@ class OctConv2D(layers.Layer):
         low_to_high  = K.conv2d(low_input, self.low_to_high_kernel,
                                 strides=self.strides, padding=self.padding,
                                 data_format="channels_last")
+        print('low_to_high',low_to_high)
         low_to_high = K.repeat_elements(low_to_high, 2, axis=1) # Nearest Neighbor Upsampling
+        print('low_to_high', low_to_high)
         low_to_high = K.repeat_elements(low_to_high, 2, axis=2)
+        print('low_to_high', low_to_high)
         # Low -> Low conv
         low_to_low   = K.conv2d(low_input, self.low_to_low_kernel,
                                 strides=self.strides, padding=self.padding,
