@@ -7,6 +7,7 @@ https://arxiv.org/abs/1904.05049
 from tensorflow.keras import layers
 from tensorflow.keras.models import Model
 import tensorflow.keras.backend as K
+import tensorflow as tf
 
 class OctConv2D(layers.Layer):
     def __init__(self, filters, alpha, kernel_size=(3,3), strides=(1,1), 
@@ -95,11 +96,12 @@ class OctConv2D(layers.Layer):
         low_to_high  = K.conv2d(low_input, self.low_to_high_kernel,
                                 strides=self.strides, padding=self.padding,
                                 data_format="channels_last")
-        print('low_to_high',low_to_high)
-        low_to_high = K.repeat_elements(low_to_high, 2, axis=1) # Nearest Neighbor Upsampling
-        print('low_to_high', low_to_high)
-        low_to_high = K.repeat_elements(low_to_high, 2, axis=2)
-        print('low_to_high', low_to_high)
+        # print('low_to_high',low_to_high)
+        # low_to_high = K.repeat_elements(low_to_high, 2, axis=1) # Nearest Neighbor Upsampling
+        # print('low_to_high', low_to_high)
+        # low_to_high = K.repeat_elements(low_to_high, 2, axis=2)
+        # print('low_to_high', low_to_high)
+        low_to_high = tf.keras.layers.UpSampling2D(size=(2, 2), data_format='channels_last')(low_to_high)
         # Low -> Low conv
         low_to_low   = K.conv2d(low_input, self.low_to_low_kernel,
                                 strides=self.strides, padding=self.padding,
